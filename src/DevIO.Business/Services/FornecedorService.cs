@@ -26,7 +26,7 @@ namespace DevIO.Business.Services
             if (!ExecutarValidacao(new FornecedorValidator(), fornecedor) 
                 || !ExecutarValidacao(new EnderecoValidator(), fornecedor.Endereco)) return false;
 
-            if (!ValidarFornecedor(fornecedor, "Adicionar")) return false;
+            if (!ValidarFornecedor(fornecedor, nameof(Adicionar))) return false;
 
             await _fornecedorRepository.Adicionar(fornecedor);
 
@@ -37,7 +37,7 @@ namespace DevIO.Business.Services
         {
             if (!ExecutarValidacao(new FornecedorValidator(), fornecedor)) return false;
 
-            if (!ValidarFornecedor(fornecedor, "Atualizar")) return false;
+            if (!ValidarFornecedor(fornecedor, nameof(Atualizar))) return false;
 
             await _fornecedorRepository.Atualizar(fornecedor);
             return true;
@@ -71,7 +71,7 @@ namespace DevIO.Business.Services
 
         private bool ValidarFornecedor(Fornecedor fornecedor, string action)
         {
-            if(action == "Adicionar")
+            if(action == nameof(Adicionar))
             {
                 if (_fornecedorRepository.Buscar(f => f.Documento == fornecedor.Documento).Result.Any())
                 {
@@ -80,7 +80,7 @@ namespace DevIO.Business.Services
                 }
             }
 
-            if(action == "Atualizar")
+            if(action == nameof(Atualizar))
             {
                 if (_fornecedorRepository.Buscar(f => f.Documento == fornecedor.Documento && f.Id != fornecedor.Id).Result.Any())
                 {
