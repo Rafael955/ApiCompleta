@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using DevIO.Api.Configuration;
 using DevIO.Api.DTOs;
 using DevIO.Business.Intefaces;
 using DevIO.Business.Models;
@@ -39,10 +40,18 @@ namespace DevIO.Api
 
             services.AddAutoMapper(typeof(Startup));
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
 
-            services.AddScoped<MeuDbContext>();
-            services.AddScoped<IFornecedorRepository, FornecedorRepository>();
+            services.Configure<ApiBehaviorOptions>(options =>
+            { // Suprime a validação automática da ViewModel
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
+            services.ResolveDependencies();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
