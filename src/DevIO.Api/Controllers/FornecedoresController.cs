@@ -14,13 +14,19 @@ namespace DevIO.Api.Controllers
     public class FornecedoresController : MainController
     {
         private readonly IFornecedorRepository _fornecedorRepository;
+        private readonly IEnderecoRepository _enderecoRepository;
         private readonly IFornecedorService _fornecedorService;
         private readonly IMapper _mapper;
 
-        public FornecedoresController(IFornecedorRepository fornecedorRepository, IFornecedorService fornecedorService, IMapper mapper, INotificador notificador) : base(notificador)
+        public FornecedoresController(IFornecedorRepository fornecedorRepository, 
+                                      IFornecedorService fornecedorService, 
+                                      IMapper mapper, 
+                                      INotificador notificador,
+                                      IEnderecoRepository enderecoRepository) : base(notificador)
         {
             _fornecedorRepository = fornecedorRepository;
             _fornecedorService = fornecedorService;
+            _enderecoRepository = enderecoRepository;
             _mapper = mapper;
         }
 
@@ -81,16 +87,37 @@ namespace DevIO.Api.Controllers
             return CustomResponse(fornecedorDto);
         }
 
-        
+        [HttpGet("obter-endereco/{id:guid}")]
+        public async Task<EnderecoDto> ObterEnderecoPorId(Guid id)
+        {
+            return _mapper.Map<EnderecoDto>(await _enderecoRepository.ObterPorId(id));
+        }
+
+        [HttpPut("atualizar-endereco/{id:guid}")]
+        public async Task<ActionResult<EnderecoDto>> AtualizarEndereco(Guid id, EnderecoDto enderecoDto)
+        {
+            if (id != enderecoDto.Id)
+            {
+                NotificarErro("O id informado não é o mesmo que foi passado na query.");
+                return CustomResponse(enderecoDto);
+            }
+
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+            await _fornecedorService.AtualizarEndereco(_mapper.Map<Endereco>(enderecoDto));
+
+            return CustomResponse(enderecoDto);
+        }
+
         private async Task<FornecedorDto> ObterFornecedorProdutosEndereco(Guid id)
         {
-            return _mapper.Map<FornecedorDto>(await _fornecedorRepository.ObterFornecedorProdutosEndereco(id)); ;
+            return _mapper.Map<FornecedorDto>(await _fornecedorRepository.ObterFornecedorProdutosEndereco(id));
         }
 
 
         private async Task<FornecedorDto> ObterFornecedorEndereco(Guid id)
         {
-            return _mapper.Map<FornecedorDto>(await _fornecedorRepository.ObterFornecedorEndereco(id)); ;
+            return _mapper.Map<FornecedorDto>(await _fornecedorRepository.ObterFornecedorEndereco(id));
         }
 
     }
