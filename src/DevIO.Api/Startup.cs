@@ -40,18 +40,9 @@ namespace DevIO.Api
 
             services.AddAutoMapper(typeof(Startup));
 
-            services.AddControllers().AddNewtonsoftJson(options =>
-            {
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            });
-
-            services.Configure<ApiBehaviorOptions>(options =>
-            { // Suprime a validação automática da ViewModel
-                options.SuppressModelStateInvalidFilter = true;
-            });
+            services.WebApiConfig();
 
             services.ResolveDependencies();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,17 +52,12 @@ namespace DevIO.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
+            else
             {
-                endpoints.MapControllers();
-            });
+                app.UseHsts();
+            }
+
+            app.UseMvcConfiguration();
         }
     }
 }
