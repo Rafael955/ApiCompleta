@@ -5,11 +5,13 @@ using AutoMapper;
 using DevIO.Api.DTOs;
 using DevIO.Business.Intefaces;
 using DevIO.Business.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace DevIO.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class FornecedoresController : MainController
     {
@@ -18,9 +20,9 @@ namespace DevIO.Api.Controllers
         private readonly IFornecedorService _fornecedorService;
         private readonly IMapper _mapper;
 
-        public FornecedoresController(IFornecedorRepository fornecedorRepository, 
-                                      IFornecedorService fornecedorService, 
-                                      IMapper mapper, 
+        public FornecedoresController(IFornecedorRepository fornecedorRepository,
+                                      IFornecedorService fornecedorService,
+                                      IMapper mapper,
                                       INotificador notificador,
                                       IEnderecoRepository enderecoRepository) : base(notificador)
         {
@@ -30,6 +32,8 @@ namespace DevIO.Api.Controllers
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
+        [HttpGet]
         public async Task<IEnumerable<FornecedorDto>> ObterTodos()
         {
             var fornecedores = _mapper.Map<IEnumerable<FornecedorDto>>(await _fornecedorRepository.ObterTodos());
@@ -37,6 +41,7 @@ namespace DevIO.Api.Controllers
             return fornecedores;
         }
 
+        [AllowAnonymous]
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<FornecedorDto>> ObterPorId(Guid id)
         {
@@ -55,7 +60,7 @@ namespace DevIO.Api.Controllers
 
             await _fornecedorService.Adicionar(_mapper.Map<Fornecedor>(fornecedorDto));
 
-            //retorne sempre o objeto Dto/ViewModel para evitar expor a sua entidade de negócio que pode vir a ter dados sensiveis. 
+            //retorne sempre o objeto Dto/ViewModel para evitar expor a sua entidade de negócio que pode vir a ter dados sensiveis.
             return CustomResponse(fornecedorDto);
         }
 
@@ -114,12 +119,10 @@ namespace DevIO.Api.Controllers
             return _mapper.Map<FornecedorDto>(await _fornecedorRepository.ObterFornecedorProdutosEndereco(id));
         }
 
-
         private async Task<FornecedorDto> ObterFornecedorEndereco(Guid id)
         {
             return _mapper.Map<FornecedorDto>(await _fornecedorRepository.ObterFornecedorEndereco(id));
         }
-
     }
 }
 
