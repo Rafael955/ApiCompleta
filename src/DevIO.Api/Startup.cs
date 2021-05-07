@@ -56,6 +56,7 @@ namespace DevIO.Api
                 app.UseHsts();
             }
 
+            app.UseAuthentication(); // Deve sempre vir antes do UseMvcConfiguration, senão não vai funcionar.
             app.UseMvcConfiguration();
         }
     }
