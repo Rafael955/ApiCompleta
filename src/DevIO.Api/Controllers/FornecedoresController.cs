@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevIO.Api.DTOs;
+using DevIO.Api.Extensions;
 using DevIO.Business.Intefaces;
 using DevIO.Business.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -32,7 +33,6 @@ namespace DevIO.Api.Controllers
             _mapper = mapper;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public async Task<IEnumerable<FornecedorDto>> ObterTodos()
         {
@@ -41,7 +41,6 @@ namespace DevIO.Api.Controllers
             return fornecedores;
         }
 
-        [AllowAnonymous]
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<FornecedorDto>> ObterPorId(Guid id)
         {
@@ -54,6 +53,7 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpPost]
+        [ClaimsAuthorize("Fornecedor", "Adicionar")]
         public async Task<ActionResult<FornecedorDto>> Adicionar(FornecedorDto fornecedorDto)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
@@ -65,6 +65,7 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [ClaimsAuthorize("Fornecedor", "Atualizar")]
         public async Task<ActionResult<FornecedorDto>> Atualizar(Guid id, FornecedorDto fornecedorDto)
         {
             if (fornecedorDto.Id != id)
@@ -81,6 +82,7 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpDelete("{id:guid}")]
+        [ClaimsAuthorize("Fornecedor", "Remover")]
         public async Task<ActionResult<FornecedorDto>> Remover(Guid id)
         {
             var fornecedorDto = await ObterFornecedorEndereco(id);
@@ -114,6 +116,8 @@ namespace DevIO.Api.Controllers
             return CustomResponse(enderecoDto);
         }
 
+        #region Metodos Internos
+
         private async Task<FornecedorDto> ObterFornecedorProdutosEndereco(Guid id)
         {
             return _mapper.Map<FornecedorDto>(await _fornecedorRepository.ObterFornecedorProdutosEndereco(id));
@@ -123,6 +127,8 @@ namespace DevIO.Api.Controllers
         {
             return _mapper.Map<FornecedorDto>(await _fornecedorRepository.ObterFornecedorEndereco(id));
         }
+
+        #endregion Metodos Internos
     }
 }
 
