@@ -34,15 +34,15 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<FornecedorDto>> ObterTodos()
+        public async Task<IEnumerable<FornecedorViewModel>> ObterTodos()
         {
-            var fornecedores = _mapper.Map<IEnumerable<FornecedorDto>>(await _fornecedorRepository.ObterTodos());
+            var fornecedores = _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos());
 
             return fornecedores;
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<FornecedorDto>> ObterPorId(Guid id)
+        public async Task<ActionResult<FornecedorViewModel>> ObterPorId(Guid id)
         {
             var fornecedor = await ObterFornecedorProdutosEndereco(id);
 
@@ -54,7 +54,7 @@ namespace DevIO.Api.Controllers
 
         [HttpPost]
         [ClaimsAuthorize("Fornecedor", "Adicionar")]
-        public async Task<ActionResult<FornecedorDto>> Adicionar(FornecedorDto fornecedorDto)
+        public async Task<ActionResult<FornecedorViewModel>> Adicionar(FornecedorViewModel fornecedorDto)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
@@ -66,7 +66,7 @@ namespace DevIO.Api.Controllers
 
         [HttpPut("{id:guid}")]
         [ClaimsAuthorize("Fornecedor", "Atualizar")]
-        public async Task<ActionResult<FornecedorDto>> Atualizar(Guid id, FornecedorDto fornecedorDto)
+        public async Task<ActionResult<FornecedorViewModel>> Atualizar(Guid id, FornecedorViewModel fornecedorDto)
         {
             if (fornecedorDto.Id != id)
             {
@@ -83,7 +83,7 @@ namespace DevIO.Api.Controllers
 
         [HttpDelete("{id:guid}")]
         [ClaimsAuthorize("Fornecedor", "Remover")]
-        public async Task<ActionResult<FornecedorDto>> Remover(Guid id)
+        public async Task<ActionResult<FornecedorViewModel>> Remover(Guid id)
         {
             var fornecedorDto = await ObterFornecedorEndereco(id);
 
@@ -95,13 +95,13 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpGet("obter-endereco/{id:guid}")]
-        public async Task<EnderecoDto> ObterEnderecoPorId(Guid id)
+        public async Task<EnderecoViewModel> ObterEnderecoPorId(Guid id)
         {
-            return _mapper.Map<EnderecoDto>(await _enderecoRepository.ObterPorId(id));
+            return _mapper.Map<EnderecoViewModel>(await _enderecoRepository.ObterPorId(id));
         }
 
         [HttpPut("atualizar-endereco/{id:guid}")]
-        public async Task<ActionResult<EnderecoDto>> AtualizarEndereco(Guid id, EnderecoDto enderecoDto)
+        public async Task<ActionResult<EnderecoViewModel>> AtualizarEndereco(Guid id, EnderecoViewModel enderecoDto)
         {
             if (id != enderecoDto.Id)
             {
@@ -118,14 +118,14 @@ namespace DevIO.Api.Controllers
 
         #region Metodos Internos
 
-        private async Task<FornecedorDto> ObterFornecedorProdutosEndereco(Guid id)
+        private async Task<FornecedorViewModel> ObterFornecedorProdutosEndereco(Guid id)
         {
-            return _mapper.Map<FornecedorDto>(await _fornecedorRepository.ObterFornecedorProdutosEndereco(id));
+            return _mapper.Map<FornecedorViewModel>(await _fornecedorRepository.ObterFornecedorProdutosEndereco(id));
         }
 
-        private async Task<FornecedorDto> ObterFornecedorEndereco(Guid id)
+        private async Task<FornecedorViewModel> ObterFornecedorEndereco(Guid id)
         {
-            return _mapper.Map<FornecedorDto>(await _fornecedorRepository.ObterFornecedorEndereco(id));
+            return _mapper.Map<FornecedorViewModel>(await _fornecedorRepository.ObterFornecedorEndereco(id));
         }
 
         #endregion Metodos Internos
