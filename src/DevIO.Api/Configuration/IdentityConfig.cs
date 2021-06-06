@@ -26,7 +26,7 @@ namespace DevIO.Api.Configuration
             var appSettingsSection = configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
-            var appSettings = configuration.Get<AppSettings>();
+            var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
 
             services.AddAuthentication(x =>

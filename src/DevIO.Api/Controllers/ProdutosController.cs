@@ -31,25 +31,25 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ProdutoDto>> ObterTodos(CancellationToken cancellationToken)
+        public async Task<IEnumerable<ProdutoViewModel>> ObterTodos(CancellationToken cancellationToken)
         {
             try
             {
                 return await Task.Run(async () =>
                 {
                     //await Task.Delay(10000);
-                    return _mapper.Map<IEnumerable<ProdutoDto>>(await _produtoRepository.ObterProdutosFornecedores());
+                    return _mapper.Map<IEnumerable<ProdutoViewModel>>(await _produtoRepository.ObterProdutosFornecedores());
                 }, cancellationToken);
             }
             catch (TaskCanceledException)
             {
             }
 
-            return Enumerable.Empty<ProdutoDto>();
+            return Enumerable.Empty<ProdutoViewModel>();
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<ProdutoDto>> ObterPorId(Guid id)
+        public async Task<ActionResult<ProdutoViewModel>> ObterPorId(Guid id)
         {
             var produtoDto = await ObterProduto(id);
 
@@ -60,7 +60,7 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ProdutoDto>> Adicionar(ProdutoDto produtoDto)
+        public async Task<ActionResult<ProdutoViewModel>> Adicionar(ProdutoViewModel produtoDto)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
@@ -79,7 +79,7 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Atualizar(Guid id, ProdutoDto produtoDto)
+        public async Task<IActionResult> Atualizar(Guid id, ProdutoViewModel produtoDto)
         {
             if (id != produtoDto.Id)
             {
@@ -117,7 +117,7 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ProdutoDto>> AdicionarAlternativo(ProdutoDto produtoDto, CancellationToken token)
+        public async Task<ActionResult<ProdutoViewModel>> AdicionarAlternativo(ProdutoViewModel produtoDto, CancellationToken token)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
@@ -155,7 +155,7 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<ProdutoDto>> Atualizar(ProdutoDto produtoDto)
+        public async Task<ActionResult<ProdutoViewModel>> Atualizar(ProdutoViewModel produtoDto)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
@@ -165,7 +165,7 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult<ProdutoDto>> Excluir(Guid id)
+        public async Task<ActionResult<ProdutoViewModel>> Excluir(Guid id)
         {
             var produtoDto = await ObterProduto(id);
 
@@ -176,9 +176,9 @@ namespace DevIO.Api.Controllers
             return CustomResponse(produtoDto);
         }
 
-        private async Task<ProdutoDto> ObterProduto(Guid id)
+        private async Task<ProdutoViewModel> ObterProduto(Guid id)
         {
-            return _mapper.Map<ProdutoDto>(await _produtoRepository.ObterProdutoFornecedor(id));
+            return _mapper.Map<ProdutoViewModel>(await _produtoRepository.ObterProdutoFornecedor(id));
         }
 
         private bool UploadArquivo(string arquivo, string imgNome)

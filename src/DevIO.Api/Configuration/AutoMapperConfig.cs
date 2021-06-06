@@ -9,11 +9,11 @@ namespace DevIO.Api.Configuration
         // Tudo o que estiver aqui dentro será resolvido pelo AutoMapper assim que a API for inicializada
         public AutoMapperConfig()
         {
-            CreateMap<Fornecedor, FornecedorDto>().ReverseMap();
-            CreateMap<Endereco, EnderecoDto>().ReverseMap();
+            CreateMap<Fornecedor, FornecedorViewModel>().ReverseMap();
+            CreateMap<Endereco, EnderecoViewModel>().ReverseMap();
 
-            CreateMap<ProdutoDto, Produto>();
-            CreateMap<Produto, ProdutoDto>()
+            CreateMap<ProdutoViewModel, Produto>();
+            CreateMap<Produto, ProdutoViewModel>()
                 .ForMember(dest => dest.NomeFornecedor, opt => opt.MapFrom(src => src.Fornecedor.Nome));
         }
     }
