@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DevIO.Api.Controllers;
 using DevIO.Api.DTOs;
 using DevIO.Business.Intefaces;
 using DevIO.Business.Models;
@@ -11,9 +12,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DevIO.Api.Controllers
+namespace DevIO.Api.V1.Controllers
 {
     [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class ProdutosController : MainController
     {
         private readonly IProdutoRepository _produtoRepository;
@@ -23,7 +26,8 @@ namespace DevIO.Api.Controllers
         public ProdutosController(INotificador notificador,
                                   IProdutoRepository produtoRepository,
                                   IProdutoService produtoService,
-                                  IMapper mapper) : base(notificador)
+                                  IMapper mapper,
+                                  IUser appUser) : base(notificador, appUser)
         {
             _produtoRepository = produtoRepository;
             _produtoService = produtoService;
