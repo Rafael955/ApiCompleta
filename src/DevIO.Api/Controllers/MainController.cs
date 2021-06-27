@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DevIO.Business.Intefaces;
 using DevIO.Business.Notificacoes;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,21 @@ namespace DevIO.Api.Controllers
     public abstract class MainController : ControllerBase
     {
         private readonly INotificador _notificador;
+        public readonly IUser AppUser;
 
-        public MainController(INotificador notificador)
+        protected Guid UsuarioId { get; set; }
+        protected bool UsuarioAutenticado { get; set; }
+
+        public MainController(INotificador notificador, IUser appUser)
         {
             _notificador = notificador;
+            AppUser = appUser;
+
+            if (appUser.IsAuthenticated())
+            {
+                UsuarioId = appUser.GetUserId();
+                UsuarioAutenticado = true;
+            }
         }
 
         protected bool OperacaoValida()
@@ -26,7 +38,8 @@ namespace DevIO.Api.Controllers
         {
             if (OperacaoValida())
             {
-                return Ok(new { 
+                return Ok(new
+                {
                     success = true,
                     data = result
                 });
@@ -77,7 +90,5 @@ namespace DevIO.Api.Controllers
         {
             _notificador.Handle(new Notificacao(message));
         }
-
-
     }
 }

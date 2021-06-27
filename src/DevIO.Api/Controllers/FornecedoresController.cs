@@ -25,7 +25,8 @@ namespace DevIO.Api.Controllers
                                       IFornecedorService fornecedorService,
                                       IMapper mapper,
                                       INotificador notificador,
-                                      IEnderecoRepository enderecoRepository) : base(notificador)
+                                      IEnderecoRepository enderecoRepository,
+                                      IUser appUser) : base(notificador, appUser)
         {
             _fornecedorRepository = fornecedorRepository;
             _fornecedorService = fornecedorService;
@@ -34,6 +35,7 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IEnumerable<FornecedorViewModel>> ObterTodos()
         {
             var fornecedores = _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos());

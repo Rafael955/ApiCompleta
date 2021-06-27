@@ -13,7 +13,7 @@ namespace DevIO.Business.Services
         private readonly IFornecedorRepository _fornecedorRepository;
         private readonly IEnderecoRepository _enderecoRepository;
 
-        public FornecedorService(IFornecedorRepository fornecedorRepository, 
+        public FornecedorService(IFornecedorRepository fornecedorRepository,
                                  IEnderecoRepository enderecoRepository,
                                  INotificador notificador) : base(notificador)
         {
@@ -23,7 +23,7 @@ namespace DevIO.Business.Services
 
         public async Task<bool> Adicionar(Fornecedor fornecedor)
         {
-            if (!ExecutarValidacao(new FornecedorValidator(), fornecedor) 
+            if (!ExecutarValidacao(new FornecedorValidator(), fornecedor)
                 || !ExecutarValidacao(new EnderecoValidator(), fornecedor.Endereco)) return false;
 
             if (!ValidarFornecedor(fornecedor, nameof(Adicionar))) return false;
@@ -71,7 +71,7 @@ namespace DevIO.Business.Services
 
         private bool ValidarFornecedor(Fornecedor fornecedor, string action)
         {
-            if(action == nameof(Adicionar))
+            if (action == nameof(Adicionar))
             {
                 if (_fornecedorRepository.Buscar(f => f.Documento == fornecedor.Documento).Result.Any())
                 {
@@ -80,15 +80,15 @@ namespace DevIO.Business.Services
                 }
             }
 
-            if(action == nameof(Atualizar))
+            if (action == nameof(Atualizar))
             {
                 if (_fornecedorRepository.Buscar(f => f.Documento == fornecedor.Documento && f.Id != fornecedor.Id).Result.Any())
                 {
-                    Notificar("Já existe um fornecedor com este documento infomado.");
+                    Notificar("Já existe um fornecedor com este documento informado.");
                     return false;
                 }
             }
-            
+
             return true;
         }
 

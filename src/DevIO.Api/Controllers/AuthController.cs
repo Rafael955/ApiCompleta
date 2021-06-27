@@ -12,17 +12,23 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 
 namespace DevIO.Api.Controllers
 {
     [Route("api")]
+    //[DisableCors]//Ninguém de "fora" poderá acessar os métodos desta Controller.
     public class AuthController : MainController
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppSettings _appSettings;
 
-        public AuthController(INotificador notificador, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IOptions<AppSettings> appSettings) : base(notificador)
+        public AuthController(INotificador notificador,
+                              SignInManager<IdentityUser> signInManager,
+                              UserManager<IdentityUser> userManager,
+                              IOptions<AppSettings> appSettings,
+                              IUser appUser) : base(notificador, appUser)
         {
             _signInManager = signInManager;
             _userManager = userManager;
