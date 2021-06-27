@@ -1,10 +1,9 @@
-﻿using System;
-using System.Linq;
-using DevIO.Business.Intefaces;
+﻿using DevIO.Business.Intefaces;
 using DevIO.Business.Notificacoes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
 
 namespace DevIO.Api.Controllers
 {

@@ -28,6 +28,12 @@ namespace DevIO.Api.Configuration
                 options.ReportApiVersions = true;
             });
 
+            services.AddVersionedApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
+            });
+
             services.Configure<ApiBehaviorOptions>(options =>
             { // Suprime a validação automática da ViewModel
                 options.SuppressModelStateInvalidFilter = true;
@@ -40,7 +46,8 @@ namespace DevIO.Api.Configuration
                     .AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader()
-                    .AllowCredentials());
+                    //.AllowCredentials()
+                    );
 
                 options.AddPolicy("Production",
                     builder => builder
