@@ -18,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 namespace DevIO.Api
 {
@@ -41,6 +42,12 @@ namespace DevIO.Api
 
             services.WebApiConfig();
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+            });
+
             services.ResolveDependencies();
         }
 
@@ -60,6 +67,12 @@ namespace DevIO.Api
 
             app.UseAuthentication(); // Deve sempre vir antes do UseMvcConfiguration, senão não vai funcionar.
             app.UseMvcConfiguration();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
         }
     }
 }

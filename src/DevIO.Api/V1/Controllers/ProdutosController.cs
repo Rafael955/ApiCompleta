@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 
 namespace DevIO.Api.V1.Controllers
 {
-    [Route("api/[controller]")]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
     public class ProdutosController : MainController
