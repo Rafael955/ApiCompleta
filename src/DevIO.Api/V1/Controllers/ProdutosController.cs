@@ -167,7 +167,7 @@ namespace DevIO.Api.V1.Controllers
             return CustomResponse(produtoDto);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id:guid}")]
         public async Task<ActionResult<ProdutoViewModel>> Excluir(Guid id)
         {
             var produtoDto = await ObterProduto(id);
