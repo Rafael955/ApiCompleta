@@ -39,6 +39,7 @@ namespace DevIO.Api.V1.Controllers
             _logger = logger;
         }
 
+        //Comentario de teste
         [HttpPost("nova-conta")]
         public async Task<ActionResult> Registrar(UserViewModel user)
         {
