@@ -12,8 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="5.0.3" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.1.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="Elmah.Io.AspNetCore" Version="3.12.24" />
+    <PackageReference Include="Elmah.Io.AspNetCore.ExtensionsLogging" Version="3.10.15" />
+    <PackageReference Include="Elmah.Io.Extensions.Logging" Version="3.10.15" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.15" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.15" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.15" />

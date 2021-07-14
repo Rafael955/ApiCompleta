@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DevIO.Api.Configuration;
 using DevIO.Api.DTOs;
+using DevIO.Api.Extensions;
 using DevIO.Business.Intefaces;
 using DevIO.Business.Models;
 using DevIO.Data.Context;
@@ -53,6 +54,11 @@ namespace DevIO.Api
             //    c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             //});
 
+            services.AddHealthChecks()
+                .AddSqlServer(Configuration.GetConnectionString("DefaultConnection"), name: "BancoSQLServer");
+
+            services.AddHealthChecksUI();
+
             services.ResolveDependencies();
         }
 
@@ -71,11 +77,21 @@ namespace DevIO.Api
             }
 
             app.UseAuthentication(); // Deve sempre vir antes do UseMvcConfiguration, senão não vai funcionar.
+
+            app.UseMiddleware<ExceptionMiddleware>();
+
             app.UseMvcConfiguration();
 
             app.UseSwaggerConfig(provider);
 
             app.UseLoggingConfiguration();
+
+            app.UseHealthChecks("/api/health-checks");
+
+            app.UseHealthChecksUI(options =>
+            {
+                options.UIPath = "/api/health-checks-ui";
+            });
         }
     }
 }
