@@ -1,34 +1,30 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
 using DevIO.Api.Configuration;
-using DevIO.Api.DTOs;
 using DevIO.Api.Extensions;
-using DevIO.Business.Intefaces;
-using DevIO.Business.Models;
 using DevIO.Data.Context;
-using DevIO.Data.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
 
 namespace DevIO.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IHostEnvironment hostEnvironment)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(hostEnvironment.ContentRootPath)
+                .AddJsonFile("appsettings.json", true, true)
+                .AddJsonFile($"appsettings.{hostEnvironment.EnvironmentName}.json", true, true)
+                .AddEnvironmentVariables();
+
+            if (hostEnvironment.IsDevelopment())
+                builder.AddUserSecrets<Startup>();
+
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -42,7 +38,7 @@ namespace DevIO.Api
 
             services.AddAutoMapper(typeof(Startup));
 
-            services.WebApiConfig();
+            services.AddApiConfig();
 
             services.AddSwaggerConfig();
 
@@ -65,33 +61,11 @@ namespace DevIO.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseCors("Development");
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseCors("Production");
-                app.UseHsts();
-            }
-
-            app.UseAuthentication(); // Deve sempre vir antes do UseMvcConfiguration, senão não vai funcionar.
-
-            app.UseMiddleware<ExceptionMiddleware>();
-
-            app.UseMvcConfiguration();
+            app.UseApiConfig(env);
 
             app.UseSwaggerConfig(provider);
 
             app.UseLoggingConfiguration();
-
-            app.UseHealthChecks("/api/health-checks");
-
-            app.UseHealthChecksUI(options =>
-            {
-                options.UIPath = "/api/health-checks-ui";
-            });
         }
     }
 }
