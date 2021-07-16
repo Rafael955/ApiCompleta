@@ -51,6 +51,7 @@ namespace DevIO.Api
             //});
 
             services.AddHealthChecks()
+                .AddCheck("Produtos", new SqlServerHealthCheck(Configuration.GetConnectionString("DefaultConnection")))
                 .AddSqlServer(Configuration.GetConnectionString("DefaultConnection"), name: "BancoSQLServer");
 
             services.AddHealthChecksUI();
