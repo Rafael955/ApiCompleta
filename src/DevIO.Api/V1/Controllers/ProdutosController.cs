@@ -150,12 +150,12 @@ namespace DevIO.Api.V1.Controllers
         }
 
         //[DisableRequestSizeLimit]
-        [RequestSizeLimit(40000000)]
-        [HttpPost("imagem")]
-        public async Task<ActionResult> AdicionarImagem(IFormFile imagem)
-        {
-            return Ok(imagem);
-        }
+        //[RequestSizeLimit(40000000)]
+        //[HttpPost("imagem")]
+        //public async Task<ActionResult> AdicionarImagem(IFormFile imagem)
+        //{
+        //    return Ok(imagem);
+        //}
 
         [HttpPut]
         public async Task<ActionResult<ProdutoViewModel>> Atualizar(ProdutoViewModel produtoDto)

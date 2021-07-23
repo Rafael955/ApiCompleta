@@ -42,19 +42,7 @@ namespace DevIO.Api
 
             services.AddSwaggerConfig();
 
-            services.AddLoggingConfiguration();
-
-            //services.AddSwaggerGen(c =>
-            //{
-            //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-            //    c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-            //});
-
-            services.AddHealthChecks()
-                .AddCheck("Produtos", new SqlServerHealthCheck(Configuration.GetConnectionString("DefaultConnection")))
-                .AddSqlServer(Configuration.GetConnectionString("DefaultConnection"), name: "BancoSQLServer");
-
-            services.AddHealthChecksUI();
+            services.AddLoggingConfiguration(Configuration);
 
             services.ResolveDependencies();
         }
